@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI勇喜さんアンケート</title>
+<style>
+  :root { --green:#2e7d32; --bg:#f4f7f4; --line:#d5ddd5; --text:#222; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,"Hiragino Sans","Yu Gothic",sans-serif; line-height:1.6; }
+  header { background:var(--green); color:#fff; padding:20px 16px; }
+  header h1 { margin:0 0 6px; font-size:1.2rem; }
+  header p { margin:0; font-size:.9rem; opacity:.95; }
+  main { max-width:640px; margin:0 auto; padding:16px; }
+  .notice { background:#fff; border-left:4px solid var(--green); padding:12px 14px; margin-bottom:16px; font-size:.9rem; border-radius:4px; }
+  .q { background:#fff; border:1px solid var(--line); border-radius:8px; padding:14px; margin-bottom:14px; }
+  .q h2 { margin:0 0 4px; font-size:1rem; color:var(--green); }
+  .q .desc { margin:0 0 10px; font-size:.88rem; color:#444; }
+  .q .eg { margin:-4px 0 10px; font-size:.8rem; color:#777; }
+  label.f { display:block; font-size:.85rem; font-weight:bold; margin:10px 0 4px; }
+  textarea, input[type=text] { width:100%; padding:10px; font-size:16px; border:1px solid #bbb; border-radius:6px; font-family:inherit; }
+  textarea { min-height:78px; resize:vertical; }
+  .opts { display:flex; flex-direction:column; gap:8px; }
+  .opts label { display:flex; align-items:center; gap:10px; padding:11px 12px; border:1px solid #bbb; border-radius:8px; background:#fafafa; font-size:.95rem; }
+  .opts input { width:20px; height:20px; flex:none; }
+  .opts label:has(input:checked) { border-color:var(--green); background:#e8f5e9; }
+  button { width:100%; padding:15px; font-size:1.05rem; font-weight:bold; color:#fff; background:var(--green); border:0; border-radius:8px; margin-top:6px; }
+  button:disabled { background:#999; }
+  .err { color:#c62828; font-size:.9rem; margin:8px 0; display:none; }
+  #done { display:none; text-align:center; padding:48px 16px; }
+  #done h2 { color:var(--green); }
+  .opt-tag { font-size:.75rem; color:#777; font-weight:normal; }
+</style>
+</head>
+<body>
+<header>
+  <h1>AI勇喜さんの活用アンケート</h1>
+  <p>他の新人の方にも使いやすくするため、感想を教えてください。</p>
+</header>
+<main>
+  <div id="formArea">
+    <div class="notice">
+      短い箇条書きで大丈夫です。良かったことだけでなく、役立たなかったことも知りたいです。「覚えていない」「変化なし」「分からない」もそのまま回答してください。<br>
+      <b>お客様の氏名・電話番号は記載しないでください。</b>
+    </div>
+
+    <form id="f">
+      <div class="q">
+        <h2>お名前 <span class="opt-tag">（任意）</span></h2>
+        <input type="text" name="name" placeholder="書かなくても送れます" autocomplete="off">
+      </div>
+
+      <div class="q">
+        <h2>① 使い始める前に困っていたこと</h2>
+        <p class="desc">電話のどんな場面で、言葉に詰まったり、対応が難しいと感じていましたか？</p>
+        <textarea name="q1"></textarea>
+      </div>
+
+      <div class="q">
+        <h2>② 実際の使い方</h2>
+        <p class="desc">いつ、どのくらい使っていましたか？</p>
+        <p class="eg">例：通話中に困ったとき／毎回表示していた／通話後に振り返った</p>
+        <textarea name="q2"></textarea>
+      </div>
+
+      <div class="q">
+        <h2>③ 覚えているアドバイス</h2>
+        <p class="desc">印象に残っている助言を一つ教えてください。正確な言葉でなくて大丈夫です。</p>
+        <label class="f">お客様の発言</label>
+        <textarea name="q3_customer"></textarea>
+        <label class="f">AIの助言</label>
+        <textarea name="q3_advice"></textarea>
+      </div>
+
+      <div class="q">
+        <h2>④ 自分が変えたこと</h2>
+        <p class="desc">その助言を受けて、実際の言い方や会話の進め方をどう変えましたか？</p>
+        <label class="f">以前は</label>
+        <textarea name="q4_before"></textarea>
+        <label class="f">使った後は</label>
+        <textarea name="q4_after"></textarea>
+        <label class="f">変えなかった場合は、その理由</label>
+        <textarea name="q4_reason"></textarea>
+      </div>
+
+      <div class="q">
+        <h2>⑤ お客様の反応と結果</h2>
+        <p class="desc">④の対応をした後、お客様はどんな言葉や反応を返しましたか？</p>
+        <label class="f">お客様の反応</label>
+        <textarea name="q5_reaction"></textarea>
+        <label class="f">結果</label>
+        <div class="opts">
+          <label><input type="radio" name="q5_result" value="資料送付になった">資料送付になった</label>
+          <label><input type="radio" name="q5_result" value="ならなかった">ならなかった</label>
+          <label><input type="radio" name="q5_result" value="その他・不明">その他・不明</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <h2>⑥ 役立たなかった点・困った点</h2>
+        <p class="desc">使いにくかったことや、助言を試してもうまくいかなかった場面はありましたか？</p>
+        <p class="eg">例：返答が遅い／読む余裕がない／内容が合わない／エラー／特になし</p>
+        <textarea name="q6"></textarea>
+      </div>
+
+      <div class="q">
+        <h2>⑦ AI以外で変わったこと</h2>
+        <p class="desc">同じ時期に、成果に関係しそうな変化はありましたか？</p>
+        <p class="eg">例：先輩の助言／トーク変更／仕事への慣れ／架電数／担当リスト／特になし・不明</p>
+        <textarea name="q7"></textarea>
+      </div>
+
+      <div class="q">
+        <h2>⑧ 今後の使い方</h2>
+        <p class="desc">これからも使いたいですか？</p>
+        <div class="opts">
+          <label><input type="radio" name="q8_choice" value="使いたい">使いたい</label>
+          <label><input type="radio" name="q8_choice" value="条件が合えば使いたい">条件が合えば使いたい</label>
+          <label><input type="radio" name="q8_choice" value="使いたくない">使いたくない</label>
+          <label><input type="radio" name="q8_choice" value="まだ分からない">まだ分からない</label>
+        </div>
+        <label class="f">理由・改善してほしいこと</label>
+        <textarea name="q8_reason"></textarea>
+      </div>
+
+      <div class="q">
+        <h2>⑨ 他の新人に伝えたいこと</h2>
+        <p class="desc">これから使う新人に、使い方のコツを一つ伝えるなら何ですか？ 思いつかなければ「まだ分からない」で大丈夫です。</p>
+        <textarea name="q9"></textarea>
+      </div>
+
+      <div class="err" id="err"></div>
+      <button type="submit" id="btn">送信する</button>
+    </form>
+  </div>
+
+  <div id="done">
+    <h2>ご協力ありがとうございました</h2>
+    <p>回答を送信しました。このページは閉じて大丈夫です。</p>
+  </div>
+</main>
+
+<script>
+// GASをウェブアプリとしてデプロイしたURLをここに貼る
+const GAS_URL = "https://script.google.com/macros/s/AKfycbznr7WtQ-f9vw4j4iI_oNX11Equ3aEsDdPc7xO38U1KiKB-sLnQOZX5tuXOLStdGGtf/exec";
+
+const form = document.getElementById("f");
+const btn = document.getElementById("btn");
+const err = document.getElementById("err");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  err.style.display = "none";
+
+  const data = Object.fromEntries(new FormData(form).entries());
+
+  // 未入力は「未回答」として扱う（空欄と「覚えていない」を区別するため）
+  const hasAny = Object.entries(data).some(([k, v]) => k !== "name" && String(v).trim() !== "");
+  if (!hasAny) {
+    err.textContent = "いずれかの項目に回答してください。";
+    err.style.display = "block";
+    return;
+  }
+  if (GAS_URL.indexOf("http") !== 0) {
+    err.textContent = "送信先が未設定です。管理者に連絡してください。";
+    err.style.display = "block";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "送信中...";
+  try {
+    await fetch(GAS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(data)
+    });
+    document.getElementById("formArea").style.display = "none";
+    document.getElementById("done").style.display = "block";
+    window.scrollTo(0, 0);
+  } catch (ex) {
+    err.textContent = "送信に失敗しました。通信状況を確認して、もう一度押してください。";
+    err.style.display = "block";
+    btn.disabled = false;
+    btn.textContent = "送信する";
+  }
+});
+</script>
+</body>
+</html>
